@@ -1,4 +1,4 @@
-# 🎯 ChurnRadar AI — Customer Retention Engine
+# ChurnRadar AI — Customer Retention Engine
 
 <p align="center">
   <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" alt="FastAPI" />
@@ -12,38 +12,38 @@
 
 ---
 
-## 🌌 Project Overview
+##  Project Overview
 **ChurnRadar AI** is a state-of-the-art, enterprise-grade full-stack customer retention engine. Built on a telemetry analysis pipeline, the application processes the IBM Telco Customer Churn dataset and uses custom Machine Learning models to predict customer churn risks in real-time. 
 
 Designed with a high-density, cyberpunk-inspired obsidian aesthetic, the frontend features live dashboards, real-time parameters, and model performance metrics charts.
 
 ---
 
-## ⚡ Key Features
+##  Key Features
 
 <details>
-  <summary><b>🛡️ OAuth2 Secure Gateways</b></summary>
+  <summary><b> OAuth2 Secure Gateways</b></summary>
   
   - Secure API endpoints using FastAPI OAuth2 standard with JWT token validation.
   - Custom registration and verification terminals for operators.
 </details>
 
 <details>
-  <summary><b>🧠 Predictive Churn Modeling</b></summary>
+  <summary><b> Predictive Churn Modeling</b></summary>
   
   - Random Forest ML model trained on the standard `Telco-Customer-Churn.csv`.
   - Serialized preprocessors and pipeline parameters cached directly in memory for low-latency scoring (<50ms).
 </details>
 
 <details>
-  <summary><b>📊 Live Interactive HUD</b></summary>
+  <summary><b> Live Interactive HUD</b></summary>
   
   - Interactive parameters sliders (Tenure, Monthly Charges, Contract details, Internet Service) to run simulated scenarios.
   - Dynamic ambient risk colors (Emerald Green, Electric Purple, Neon Hot-Pink) mapped to prediction thresholds.
 </details>
 
 <details>
-  <summary><b>📉 Recharts Analytical Charts</b></summary>
+  <summary><b> Recharts Analytical Charts</b></summary>
   
   - Live model performance metrics (Accuracy, Precision, Recall, F1-Harmonic) computed from test sets.
   - Interactive confusion matrix cell blocks detailing True/False Positive and Negative hit rates.
@@ -51,7 +51,7 @@ Designed with a high-density, cyberpunk-inspired obsidian aesthetic, the fronten
 
 ---
 
-## 🛠️ System Architecture
+##  System Architecture
 
 ```mermaid
 graph TD
@@ -64,7 +64,7 @@ graph TD
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 customer-retention-engine/
@@ -88,14 +88,14 @@ customer-retention-engine/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
-### 📋 Prerequisites
+### Prerequisites
 - **Python** 3.10+
 - **Node.js** 18+
 - **MongoDB** (Optional, falls back to a thread-safe in-memory database if offline)
 
-### 🐍 1. Backend Service Setup
+###  1. Backend Service Setup
 1. Navigate to the backend directory:
    ```bash
    cd backend
@@ -122,7 +122,7 @@ customer-retention-engine/
    ```
    *The backend will boot up at `http://localhost:8000`.*
 
-### ⚛️ 2. Frontend Application Setup
+###  2. Frontend Application Setup
 1. Navigate to the frontend directory:
    ```bash
    cd frontend
@@ -139,18 +139,18 @@ customer-retention-engine/
 
 ---
 
-## 📈 Model Diagnostics
+##  Model Diagnostics
 Metrics are computed dynamically on startup based on out-of-sample data points:
 
 | Metric | Target Value | Status |
 | :--- | :--- | :--- |
-| **Accuracy** | ~78.9% | ✅ Confirmed |
-| **Inference Latency** | <50ms | ⚡ Optimized |
-| **Database Gateway** | Fallback Thread-safe DB | 🛡️ Shielded |
+| **Accuracy** | ~78.9% |  Confirmed |
+| **Inference Latency** | <50ms |  Optimized |
+| **Database Gateway** | Fallback Thread-safe DB |  Shielded |
 
 ---
 
-## 🔒 Security Protocol
+##  Security Protocol
 Authentication follows strict B2B standards:
 - Access is restricted to registered operator profiles.
 - Cryptography uses raw, fast, and secure `bcrypt` verification instead of buggy `passlib` context wrappers.
