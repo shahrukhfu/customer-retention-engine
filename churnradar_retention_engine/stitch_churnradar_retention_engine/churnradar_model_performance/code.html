@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChurnRadar AI | Performance Metrics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(22, 31, 48, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-border {
+            box-shadow: 0 0 15px rgba(221, 183, 255, 0.1);
+        }
+        .confusion-cell {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .confusion-cell:hover {
+            filter: brightness(1.2);
+            transform: scale(1.02);
+            z-index: 10;
+        }
+        @keyframes pulse-hot {
+            0% { box-shadow: 0 0 0 0 rgba(227, 100, 167, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(227, 100, 167, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 100, 167, 0); }
+        }
+        .pulse-critical {
+            animation: pulse-hot 2s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#842bd2",
+                        "on-surface": "#dfe2f1",
+                        "on-primary": "#490080",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-dim": "#0f131d",
+                        "inverse-on-surface": "#2c303b",
+                        "on-secondary": "#003824",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface": "#0f131d",
+                        "tertiary-container": "#e364a7",
+                        "primary": "#ddb7ff",
+                        "surface-container-high": "#262a35",
+                        "surface-variant": "#313540",
+                        "tertiary-fixed-dim": "#ffafd3",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed-variant": "#85145a",
+                        "on-primary-fixed": "#2c0051",
+                        "on-surface-variant": "#cfc2d6",
+                        "surface-tint": "#ddb7ff",
+                        "on-error": "#690005",
+                        "secondary": "#4edea3",
+                        "surface-container-low": "#171b26",
+                        "tertiary-fixed": "#ffd8e7",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#00311f",
+                        "background": "#0f131d",
+                        "outline": "#988d9f",
+                        "tertiary": "#ffafd3",
+                        "primary-container": "#b76dff",
+                        "surface-bright": "#353944",
+                        "inverse-surface": "#dfe2f1",
+                        "secondary-container": "#00a572",
+                        "on-tertiary-container": "#560038",
+                        "surface-container": "#1c1f2a",
+                        "surface-container-lowest": "#0a0e18",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#4d4354",
+                        "on-primary-container": "#400071",
+                        "on-primary-fixed-variant": "#6900b3",
+                        "on-background": "#dfe2f1",
+                        "primary-fixed-dim": "#ddb7ff",
+                        "surface-container-highest": "#313540",
+                        "primary-fixed": "#f0dbff",
+                        "on-tertiary-fixed": "#3d0026",
+                        "on-secondary-fixed": "#002113",
+                        "on-tertiary": "#620040",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "container-margin": "32px",
+                        "sm": "8px",
+                        "gutter": "20px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Geist"],
+                        "headline-lg": ["Inter"],
+                        "code-data": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "code-data": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface-dim text-on-surface font-body-lg">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen flex flex-col py-lg px-md z-40 bg-surface-container border-r border-outline-variant w-64">
+<div class="mb-xl px-md">
+<h1 class="font-headline-lg text-headline-lg font-black text-primary tracking-tighter">ChurnRadar AI</h1>
+<p class="text-on-surface-variant font-label-caps text-[10px] mt-1 opacity-70">ENTERPRISE TIER v4.2</p>
+</div>
+<nav class="flex-grow space-y-2">
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined text-primary">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-primary bg-primary-container/10 border-r-4 border-primary group" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-caps text-label-caps">Predictions</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined">crisis_alert</span>
+<span class="font-label-caps text-label-caps">Retention HUD</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-4">
+<button class="w-full bg-primary-container text-on-primary-container py-md rounded-lg font-title-md text-sm hover:scale-[0.98] transition-transform shadow-lg shadow-primary/20">
+                New Analysis
+            </button>
+<div class="pt-lg border-t border-outline-variant space-y-2">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span class="text-xs font-label-caps">Help Center</span>
+</a>
+<div class="flex items-center gap-md px-md py-sm">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAljmFZNGoacJ1DHv96ZKLMhHYY8hnxc-Py-CnMWdgFgUdlCnJ0LB4hYd3B21eG1s3AfJ5QELBuyx3AjuejsBM-mLyL3P54ZooHd5DPwDRJggDBr1VzgYnbS0XMGlFXrA331ha7XBqoBh_EqNAS1BwGV53JM13OmYfFbJcSH8hk1kOtqJbk4HpPInaPFW7UgQ4pmdiuUju9gsDEkhGjd0i7usGi5Ml__CNk8ULiqEt64C1pOk6T-rTYVBQtC8Xnjkf3BoBP4xM7g5sp"/>
+</div>
+<div>
+<p class="text-[12px] font-bold">Admin User</p>
+<p class="text-[10px] text-on-surface-variant">Logout</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 p-container-margin min-h-screen">
+<!-- Header -->
+<header class="flex justify-between items-end mb-xl">
+<div>
+<nav class="flex gap-sm text-on-surface-variant font-label-caps text-[10px] mb-2">
+<span>ML MODELS</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-primary">PERFORMANCE HUD</span>
+</nav>
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Model Performance <span class="text-primary">v2.1</span></h2>
+</div>
+<div class="flex items-center gap-lg">
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-on-surface-variant">LAST UPDATED</p>
+<p class="font-code-data text-code-data text-secondary">02:14:58 UTC</p>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant"></div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-on-surface-variant">SYSTEM STATUS</p>
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<p class="font-code-data text-code-data text-secondary">STABLE</p>
+</div>
+</div>
+</div>
+</header>
+<!-- KPI Cards -->
+<div class="grid grid-cols-4 gap-lg mb-xl">
+<div class="glass-panel p-lg rounded-xl border-l-4 border-primary">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-md">OVERALL ACCURACY</p>
+<div class="flex items-baseline gap-sm">
+<span class="font-display-lg text-4xl text-on-surface">94.2%</span>
+<span class="text-secondary font-code-data text-sm">+0.8%</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl border-l-4 border-secondary">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-md">PRECISION RATE</p>
+<div class="flex items-baseline gap-sm">
+<span class="font-display-lg text-4xl text-on-surface">89.5%</span>
+<span class="text-error font-code-data text-sm">-1.2%</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl border-l-4 border-tertiary">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-md">RECALL SCORE</p>
+<div class="flex items-baseline gap-sm">
+<span class="font-display-lg text-4xl text-on-surface">91.8%</span>
+<span class="text-secondary font-code-data text-sm">+2.4%</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl border-l-4 border-primary-container">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-md">F1-HARMONIC</p>
+<div class="flex items-baseline gap-sm">
+<span class="font-display-lg text-4xl text-on-surface">90.6</span>
+<span class="text-on-surface-variant font-code-data text-sm">--</span>
+</div>
+</div>
+</div>
+<!-- Performance Grid -->
+<div class="grid grid-cols-12 gap-xl h-full">
+<!-- Left: Confusion Matrix -->
+<div class="col-span-12 lg:col-span-7 flex flex-col gap-lg">
+<div class="flex items-center justify-between">
+<h3 class="font-title-md text-title-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">grid_view</span>
+                        Machine Learning Confusion Matrix
+                    </h3>
+<div class="bg-surface-container-high px-md py-xs rounded-full border border-outline-variant">
+<p class="font-label-caps text-[10px] text-on-surface-variant">CONFIDENCE THRESHOLD: 0.85</p>
+</div>
+</div>
+<div class="relative grid grid-cols-2 grid-rows-2 gap-md aspect-square max-h-[600px] w-full p-md glass-panel rounded-2xl overflow-hidden">
+<!-- Labels -->
+<div class="absolute -left-12 top-1/2 -translate-y-1/2 rotate-[-90deg] font-label-caps text-on-surface-variant tracking-widest text-[14px]">
+                        ACTUAL CLASS
+                    </div>
+<div class="absolute left-1/2 -top-8 -translate-x-1/2 font-label-caps text-on-surface-variant tracking-widest text-[14px]">
+                        PREDICTED CLASS
+                    </div>
+<!-- True Positive -->
+<div class="confusion-cell relative bg-gradient-to-br from-secondary/40 to-secondary/10 border border-secondary/30 rounded-xl p-xl flex flex-col items-center justify-center text-center">
+<div class="absolute top-md left-md font-label-caps text-[10px] text-secondary">TRUE POSITIVE (TP)</div>
+<div class="text-6xl font-display-lg text-secondary mb-md">4,281</div>
+<div class="font-body-sm text-on-surface-variant">Predicted Churn | Actually Churned</div>
+<div class="mt-md bg-secondary/10 px-lg py-xs rounded-full border border-secondary/20">
+<span class="text-secondary font-code-data">92% Match</span>
+</div>
+</div>
+<!-- False Positive -->
+<div class="confusion-cell relative bg-gradient-to-br from-error-container/40 to-error-container/10 border border-error-container/30 rounded-xl p-xl flex flex-col items-center justify-center text-center">
+<div class="absolute top-md left-md font-label-caps text-[10px] text-error">FALSE POSITIVE (FP)</div>
+<div class="text-6xl font-display-lg text-error mb-md">248</div>
+<div class="font-body-sm text-on-surface-variant">Predicted Churn | Actually Stayed</div>
+<div class="mt-md bg-error-container/10 px-lg py-xs rounded-full border border-error-container/20">
+<span class="text-error font-code-data">Type I Error</span>
+</div>
+</div>
+<!-- False Negative -->
+<div class="confusion-cell relative bg-gradient-to-br from-tertiary-container/40 to-tertiary-container/10 border border-tertiary-container/30 rounded-xl p-xl flex flex-col items-center justify-center text-center pulse-critical">
+<div class="absolute top-md left-md font-label-caps text-[10px] text-tertiary">FALSE NEGATIVE (FN)</div>
+<div class="text-6xl font-display-lg text-tertiary mb-md">512</div>
+<div class="font-body-sm text-on-surface-variant">Predicted Stay | Actually Churned</div>
+<div class="mt-md bg-tertiary-container/10 px-lg py-xs rounded-full border border-tertiary-container/20">
+<span class="text-tertiary font-code-data">Critical Miss</span>
+</div>
+</div>
+<!-- True Negative -->
+<div class="confusion-cell relative bg-gradient-to-br from-primary-container/40 to-primary-container/10 border border-primary-container/30 rounded-xl p-xl flex flex-col items-center justify-center text-center">
+<div class="absolute top-md left-md font-label-caps text-[10px] text-primary">TRUE NEGATIVE (TN)</div>
+<div class="text-6xl font-display-lg text-primary mb-md">12,894</div>
+<div class="font-body-sm text-on-surface-variant">Predicted Stay | Actually Stayed</div>
+<div class="mt-md bg-primary-container/10 px-lg py-xs rounded-full border border-primary-container/20">
+<span class="text-primary font-code-data">Correct Retention</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Analytical Tracking -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-lg">
+<div class="flex items-center justify-between">
+<h3 class="font-title-md text-title-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">monitoring</span>
+                        Structured Analytical Tracking
+                    </h3>
+</div>
+<div class="glass-panel rounded-2xl p-xl flex-grow flex flex-col">
+<div class="space-y-xl">
+<!-- Accuracy Bar -->
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ACCURACY</p>
+<p class="text-xs text-on-surface-variant opacity-60">Global model hit rate</p>
+</div>
+<div class="text-right">
+<span class="font-code-data text-secondary text-lg">94.2%</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary" style="width: 94.2%"></div>
+</div>
+</div>
+<!-- Precision Bar -->
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">PRECISION</p>
+<p class="text-xs text-on-surface-variant opacity-60">Quality of positive predictions</p>
+</div>
+<div class="text-right">
+<span class="font-code-data text-secondary text-lg">89.5%</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 89.5%"></div>
+</div>
+</div>
+<!-- Recall Bar -->
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">RECALL</p>
+<p class="text-xs text-on-surface-variant opacity-60">Ability to find all churners</p>
+</div>
+<div class="text-right">
+<span class="font-code-data text-tertiary text-lg">91.8%</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 91.8%"></div>
+</div>
+</div>
+<!-- F1 Score Bar -->
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">F1-SCORE</p>
+<p class="text-xs text-on-surface-variant opacity-60">Harmonic mean of P &amp; R</p>
+</div>
+<div class="text-right">
+<span class="font-code-data text-primary text-lg">90.6%</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 90.6%"></div>
+</div>
+</div>
+</div>
+<!-- Comparison Radar Area (Placeholder) -->
+<div class="mt-xl flex-grow relative glass-panel rounded-xl bg-surface-dim/30 border-dashed border-outline-variant/30 flex items-center justify-center p-lg overflow-hidden">
+<img class="max-w-full max-h-[200px] opacity-60 mix-blend-screen" data-alt="A futuristic holographic radar chart visualizing machine learning performance metrics across multiple dimensions. The chart features glowing electric purple and neon emerald green lines on a deep black background with a faint grid system. The style is high-tech cyberpunk with lens flares and digital noise effects, suggesting an advanced data monitoring interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNeql-Z0AKb1LY_mFR6fktHYv10nHeuswKNmoe9f7TCyHL9JYo_4AYTD7cFyyviNxb1JOjbtBF8rr3VEfNjxUe0GfjQbKmzTU7Ogb7YQMl_-rWcLuDi7XtomC30a--RGcydDIkhsZanhxA3CSBbBqzYjoqEugWGJZGjLDSjBWeR-o1PAFobYSsHgpMyaW0aH2lnoyDqoEks6GOEIQAeMswUW8Yj3ubRW8C_BKL2MywuqYx44T7lm-ljKAy1dNiW32jrwLhC2BcfSFE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container/80 to-transparent pointer-events-none"></div>
+<div class="absolute bottom-md text-center">
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-[0.2em]">Cross-Model Variance Index</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-xl pt-xl border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-md">
+<div class="flex items-center gap-md">
+<span class="font-title-md text-title-md text-on-surface">ChurnRadar AI</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024. Precision Retention Engine.</p>
+</div>
+<div class="flex gap-lg">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Security</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interactions for live data feeling
+        setInterval(() => {
+            const statusLight = document.querySelector('.bg-secondary');
+            if(statusLight) {
+                statusLight.style.opacity = statusLight.style.opacity === '0.5' ? '1' : '0.5';
+            }
+        }, 1000);
+
+        // Add random hover noise effect to matrix cells
+        document.querySelectorAll('.confusion-cell').forEach(cell => {
+            cell.addEventListener('mouseenter', () => {
+                const colors = ['rgba(221, 183, 255, 0.2)', 'rgba(78, 222, 163, 0.2)', 'rgba(255, 175, 211, 0.2)'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                cell.style.boxShadow = `0 0 30px ${randomColor}`;
+            });
+            cell.addEventListener('mouseleave', () => {
+                cell.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body></html>
